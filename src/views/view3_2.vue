@@ -2,13 +2,13 @@
   <div class="container">
     <svg width="100%" height="100%"></svg>
   </div>
-  <button @click="creatScatterChart">1112</button>
+  <button @click="creatScatterChart">111</button>
 </template>
 
 <script>
 import axisJson from '../data/scatter/axis.json'
 import pointJson2 from '../data/scatter/point_2.json'
-// import pointObjJson2 from '../data/scatter/point_obj_2.json'
+import pointObjJson2 from '../data/scatter/point_obj_2.json'
 import * as d3 from 'd3'
 // import test from '../data/text.json'
 
@@ -17,6 +17,7 @@ export default {
   data () {
     return {
       chartValue: {
+        showAll: [4, 6, 10, 13, 15, 16]
       },
       chartConfig: {
         margin: 10,
@@ -28,7 +29,8 @@ export default {
   methods: {
     getColor (idx, proportion) {
       const palette = [ // 从上到下：绿黄蓝紫灰红
-        ['#2ca25f', '#99d8c9'],
+        // ['#2ca25f', '#99d8c9'],
+        ['#2ca25f', '#f03b20'],
         ['#fdae6b', '#ffeda0'],
         ['#3182bd', '#9ecae1'],
         ['#756bb1', '#bcbddc'],
@@ -55,6 +57,7 @@ export default {
         .attr('class', function (d, i) {
           return 'square' + (i + 1)
         })
+      const axissValue = that.getAxiss()[0]
       for (let i = 0; i < coordinations.length; i++) {
         const square = squares.select('.square' + (i + 1))
         const coordination = coordinations[i]
@@ -63,12 +66,11 @@ export default {
           .attr('y', coordination.y)
           .attr('width', that.chartConfig.squareValue)
           .attr('height', that.chartConfig.squareValue)
-          .attr('stroke', 'red')
+          // .attr('stroke', 'red')
           .attr('fill', 'none')
         const axiss = square.append('g')
           .classed('axiss', true)
           .attr('transform', 'translate(' + coordination.x + ',' + coordination.y + ')')
-        const axissValue = that.getAxiss()[0]
         axiss.selectAll('g')
           .data(axissValue)
           .enter()
@@ -91,7 +93,8 @@ export default {
           const smallSquare = smallSquares.select('.smallSquare' + (k + 1))
           if (i % 2 === 0) {
             axis.append('rect')
-              .attr('x', that.chartConfig.axisValue[k])
+              // 按照 4 3 2 1 0进行作图
+              .attr('x', that.chartConfig.axisValue[axissValue.length - 1 - k])
               .attr('y', 10)
               .attr('width', 40)
               .attr('height', 10)
@@ -111,7 +114,7 @@ export default {
             }
           } else {
             axis.append('rect')
-              .attr('y', that.chartConfig.axisValue[k])
+              .attr('y', that.chartConfig.axisValue[axissValue.length - 1 - k])
               .attr('x', 10)
               .attr('width', 10)
               .attr('height', 40)
@@ -133,9 +136,39 @@ export default {
         }
       }
       const pointsData = that.getPoints(pointJson2)
-      that.calPointsCoordinates(pointsData, that.getAxiss()[0], that.getAxiss()[1], 0)
-      // const pointsObjData = that.getPoints(pointObjJson2)
-      // console.log(pointsObjData)
+      const pointsCoordinates = that.calPointsCoordinates(pointsData, that.getAxiss()[0], that.getAxiss()[2], 0)
+      const pointsObjData = that.getPoints(pointObjJson2)
+      const pointsObjCoordinates = that.calPointsCoordinates(pointsObjData, that.getAxiss()[0], that.getAxiss()[2], 0)
+      const points = main.append('g')
+        .classed('points', true)
+      points.selectAll('points')
+        .data(pointsCoordinates)
+        .enter()
+        .append('circle')
+        .attr('cx', function (d) {
+          return d.x
+        })
+        .attr('cy', function (d) {
+          return d.y
+        })
+        .attr('r', 2)
+        .attr('fill', function (d, index) {
+          return that.getColor(0, axissValue[d.axis].proportion)
+        })
+      points.selectAll('points')
+        .data(pointsObjCoordinates)
+        .enter()
+        .append('circle')
+        .attr('cx', function (d) {
+          return d.x
+        })
+        .attr('cy', function (d) {
+          return d.y
+        })
+        .attr('r', 2)
+        .attr('fill', function (d, index) {
+          return that.getColor(0, axissValue[d.axis].proportion)
+        })
     },
     // 获取axis.json文件里的数据，返回一个26*5的数组，元素为min，max，proportion
     getAxiss () {
@@ -172,6 +205,7 @@ export default {
         const y = pointsFile[pointKeys[i]][0][1]
         const axis = pointsFile[pointKeys[i]][1]
         points.push({
+          name: pointKeys[i],
           x: x,
           y: y,
           axis: axis
@@ -180,24 +214,36 @@ export default {
       return points
     },
     // 传入数据分别为点数据，本轴数据，外轴数据，奇偶判别
+    // 按轴输出点的坐标,以及对应的颜色
     calPointsCoordinates (pointsData, axisData1, axisData2, flag) {
+      const points = []
       for (let i = 0; i < pointsData.length; i++) {
-        const sliceX = pointsData[i].axis.slice(2, 3)
+        const sliceX = pointsData[i].axis.slice(2, 3) // 将来容易在这里出错
         const sliceY = this.calSliceY(pointsData[i].y, axisData2)
         if (flag === 0) {
-          const x = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - pointsData[i].x / axisData1[sliceX] * 40
-          const y = this.chartConfig.axisValue[axisData2.length - 1 - sliceX] + 40 - pointsData[i].x / axisData2[sliceY] * 40
-          console.log(x + y)
+          const x = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - (pointsData[i].x - axisData1[sliceX].min) / (axisData1[sliceX].max - axisData1[sliceX].min) * 40
+          const y = this.chartConfig.axisValue[axisData2.length - 1 - sliceY] + 40 - (pointsData[i].y - axisData2[sliceY].min) / (axisData2[sliceY].max - axisData2[sliceY].min) * 40
+          if (i === 19) console.log(axisData2[sliceY].max - axisData2[sliceY].min)
+          points.push({
+            x: x,
+            y: y,
+            axis: sliceX
+          })
         } else {
-          const y = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - pointsData[i].x / axisData1[sliceX] * 40
-          const x = this.chartConfig.axisValue[axisData2.length - 1 - sliceX] + 40 - pointsData[i].x / axisData2[sliceY] * 40
-          console.log(x + y)
+          const y = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - (pointsData[i].x - axisData1[sliceX].min) / (axisData1[sliceX].max - axisData1[sliceX].min) * 40
+          const x = this.chartConfig.axisValue[axisData2.length - 1 - sliceY] + 40 - (pointsData[i].y - axisData2[sliceY].min) / (axisData2[sliceY].max - axisData2[sliceY].min) * 40
+          points.push({
+            x: x,
+            y: y,
+            axis: sliceX
+          })
         }
       }
+      return points
     },
     calSliceY (y, axisData) {
       for (let i = 0; i < axisData.length; i++) {
-        if (y < axisData[i].max && y > axisData[i].min) {
+        if (y <= axisData[i].max && y >= axisData[i].min) {
           return i
         }
       }
