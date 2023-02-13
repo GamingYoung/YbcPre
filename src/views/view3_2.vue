@@ -7,6 +7,8 @@
 
 <script>
 import axisJson from '../data/scatter/axis.json'
+import pointJson2 from '../data/scatter/point_2.json'
+// import pointObjJson2 from '../data/scatter/point_obj_2.json'
 import * as d3 from 'd3'
 // import test from '../data/text.json'
 
@@ -18,7 +20,7 @@ export default {
       },
       chartConfig: {
         margin: 10,
-        squareValue: 300,
+        squareValue: 270,
         axisValue: [30, 80, 130, 180, 230]
       }
     }
@@ -43,11 +45,9 @@ export default {
         .append('g')
         .classed('main', true)
         .attr('transform', 'translate(' + 0 + ',' + 0 + ')')
-      // const axiss = that.calAxiss()
       const coordinations = that.calSquareCoordinates(5)
-      // console.log(coordinations)
       const squares = main.append('g')
-        .classed('areas', true)
+        .classed('squares', true)
       squares.selectAll('g')
         .data(coordinations)
         .enter()
@@ -55,11 +55,9 @@ export default {
         .attr('class', function (d, i) {
           return 'square' + (i + 1)
         })
-      // console.log(coordinations.length)
       for (let i = 0; i < coordinations.length; i++) {
         const square = squares.select('.square' + (i + 1))
         const coordination = coordinations[i]
-        // console.log(coordination.x)
         square.append('rect')
           .attr('x', coordination.x)
           .attr('y', coordination.y)
@@ -70,8 +68,7 @@ export default {
         const axiss = square.append('g')
           .classed('axiss', true)
           .attr('transform', 'translate(' + coordination.x + ',' + coordination.y + ')')
-        // console.log(that.calAxiss()[0][0])
-        const axissValue = that.calAxiss()[0]
+        const axissValue = that.getAxiss()[0]
         axiss.selectAll('g')
           .data(axissValue)
           .enter()
@@ -101,6 +98,17 @@ export default {
               .attr('fill', function (d, index) {
                 return that.getColor(i, axissValue[k].proportion)
               })
+            for (let j = 0; j < axissValue.length; j++) {
+              smallSquare.append('rect')
+                .attr('x', that.chartConfig.axisValue[k])
+                .attr('y', that.chartConfig.axisValue[j])
+                .attr('width', 40)
+                .attr('height', 40)
+                .attr('fill', 'none')
+                .attr('stroke-width', 1)
+                .attr('stroke', 'black')
+                .attr('stroke-dasharray', 5)
+            }
           } else {
             axis.append('rect')
               .attr('y', that.chartConfig.axisValue[k])
@@ -110,35 +118,27 @@ export default {
               .attr('fill', function (d, index) {
                 return that.getColor(i, axissValue[k].proportion)
               })
+            for (let j = 0; j < axissValue.length; j++) {
+              smallSquare.append('rect')
+                .attr('x', that.chartConfig.axisValue[j])
+                .attr('y', that.chartConfig.axisValue[k])
+                .attr('width', 40)
+                .attr('height', 40)
+                .attr('fill', 'none')
+                .attr('stroke-width', 1)
+                .attr('stroke', 'black')
+                .attr('stroke-dasharray', 5)
+            }
           }
-          smallSquare.append('rect')
-            .attr('x', that.chartConfig.axisValue[k])
-            .attr('y', that.chartConfig.axisValue[k])
-            .attr('width', 40)
-            .attr('height', 40)
-            .attr('fill', function (d, index) {
-              return that.getColor(i, axissValue[k].proportion)
-            })
         }
       }
-      // const squares = main.append('g')
-      //   .classed('squares', true)
-      // squares.selectAll('square')
-      //   .data(coordinations)
-      //   .enter()
-      //   .append('rect')
-      //   .attr('x', function (d) {
-      //     return d.x
-      //   })
-      //   .attr('y', function (d) {
-      //     return d.y
-      //   })
-      //   .attr('width', that.chartConfig.squareValue)
-      //   .attr('height', that.chartConfig.squareValue)
-      //   // .attr('fill', 'none')
+      const pointsData = that.getPoints(pointJson2)
+      that.calPointsCoordinates(pointsData, that.getAxiss()[0], that.getAxiss()[1], 0)
+      // const pointsObjData = that.getPoints(pointObjJson2)
+      // console.log(pointsObjData)
     },
     // 获取axis.json文件里的数据，返回一个26*5的数组，元素为min，max，proportion
-    calAxiss () {
+    getAxiss () {
       // keys为第一层26个title
       // key1为里面title，就一个，只有0可用
       // 读取数组里范围的格式：axisJson[keys[0]][0][keys1[0]][0][0]
@@ -162,6 +162,46 @@ export default {
       }
       return axiss
     },
+    // 获取point和point_obj文件里点的数据，返回一个数组，元素为x,y,axis
+    getPoints (fileName) {
+      const pointsFile = fileName
+      const pointKeys = Object.keys(pointsFile)
+      const points = []
+      for (let i = 0; i < pointKeys.length; i++) {
+        const x = pointsFile[pointKeys[i]][0][0]
+        const y = pointsFile[pointKeys[i]][0][1]
+        const axis = pointsFile[pointKeys[i]][1]
+        points.push({
+          x: x,
+          y: y,
+          axis: axis
+        })
+      }
+      return points
+    },
+    // 传入数据分别为点数据，本轴数据，外轴数据，奇偶判别
+    calPointsCoordinates (pointsData, axisData1, axisData2, flag) {
+      for (let i = 0; i < pointsData.length; i++) {
+        const sliceX = pointsData[i].axis.slice(2, 3)
+        const sliceY = this.calSliceY(pointsData[i].y, axisData2)
+        if (flag === 0) {
+          const x = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - pointsData[i].x / axisData1[sliceX] * 40
+          const y = this.chartConfig.axisValue[axisData2.length - 1 - sliceX] + 40 - pointsData[i].x / axisData2[sliceY] * 40
+          console.log(x + y)
+        } else {
+          const y = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - pointsData[i].x / axisData1[sliceX] * 40
+          const x = this.chartConfig.axisValue[axisData2.length - 1 - sliceX] + 40 - pointsData[i].x / axisData2[sliceY] * 40
+          console.log(x + y)
+        }
+      }
+    },
+    calSliceY (y, axisData) {
+      for (let i = 0; i < axisData.length; i++) {
+        if (y < axisData[i].max && y > axisData[i].min) {
+          return i
+        }
+      }
+    },
     // 计算大正方形的起点坐标，idx为第idx个
     calSquareCoordinates (idx) {
       const coordinations = []
@@ -182,6 +222,14 @@ export default {
 .container {
   width: 1200px;
   height: 900px;
+  /*border: 2px solid black;*/
+}
+
+.smallSquare rect {
+  border: 2px solid black;
+}
+
+.axiss rect {
   border: 2px solid black;
 }
 

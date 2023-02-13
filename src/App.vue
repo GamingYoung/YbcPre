@@ -3,7 +3,8 @@
 <!--    <router-link to="/">Home</router-link> |-->
     <router-link to="/about">View2</router-link> |
     <router-link to="/about1">View3_1</router-link> |
-    <router-link to="/view3_2">View3_2</router-link>
+    <router-link to="/view3_2">View3_2</router-link> |
+    <router-link to="/view3_3">View3_3</router-link> |
   </nav>
   <router-view/>
 </template>
