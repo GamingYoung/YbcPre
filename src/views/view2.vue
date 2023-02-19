@@ -8,7 +8,7 @@
 <script>
 import * as d3 from 'd3'
 export default {
-  name: 'aboutView',
+  name: 'view_2',
   data () {
     return {
       chartData: {

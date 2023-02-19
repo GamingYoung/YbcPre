@@ -20,7 +20,7 @@ import eclat4 from '../data/tree/eclat_4.json'
 import eclat5 from '../data/tree/eclat_5.json'
 import eclat6 from '../data/tree/eclat_6.json'
 export default {
-  name: 'about1View',
+  name: 'view3_1',
   data () {
     return {
       values: [
