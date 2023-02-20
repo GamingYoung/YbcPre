@@ -5,6 +5,7 @@
     <router-link to="/view3_1">View3_1</router-link> |
     <router-link to="/view3_2">View3_2</router-link> |
     <router-link to="/view3_3">View3_3</router-link> |
+    <router-link to="/view4">View4</router-link> |
   </nav>
   <router-view/>
 </template>
