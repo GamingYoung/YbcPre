@@ -126,6 +126,20 @@ export default {
           .attr('stroke', 'yellow')
       }
 
+      // 定义线性渐变
+      const defs = main.append('defs')
+      const linearGradient = defs.append('linearGradient')
+        .attr('id', 'linearColor')
+        .attr('x1', '0%')
+        .attr('y1', '0%')
+        .attr('x2', '100%')
+        .attr('y2', '0%')
+      const stop1 = linearGradient.append('stop')
+        .attr('offset', '0%')
+      stop1.style('stop-color', 'red')
+      const stop2 = linearGradient.append('stop')
+        .attr('offset', '100%')
+      stop2.style('stop-color', 'blue')
       // 画圆环
       const ringsData = that.getRingData(ringJson)
       const views = main.append('g')
@@ -140,6 +154,13 @@ export default {
       for (let i = 0; i < ringsData[0].length; i++) {
         let view = views.select('.view' + (i + 1))
         view = main.append('g').attr('transform', 'translate(' + linesPoints[0][i].x + ',' + linesPoints[0][i].y + ')')
+        const path = d3.path()
+        path.arc(0, 0, that.chartConfig.lineRadius, -Math.PI, 0.5 * Math.PI)
+        view.append('path')
+          .attr('d', path.toString())
+          .style('fill', 'lightgrey')
+          .style('stroke', 'url(#' + linearGradient.attr('id') + ')')
+          .style('stroke-width', '2')
         // 画圆
         const circle = view.append('circle')
         circle.attr('cx', 0)
