@@ -25,7 +25,8 @@ export default {
         circleMaxRadius: 15,
         ringMinRadius: 20,
         ringMaxRadius: 30,
-        lineRadius: 40
+        lineRadius: 40,
+        count: 1
       }
     }
   },
