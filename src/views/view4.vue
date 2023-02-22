@@ -36,6 +36,18 @@ export default {
     }
   },
   methods: {
+    // 根据比例获取响应颜色
+    getColor (proportion) {
+      const palette = [
+        ['red', 'blue'],
+        ['green', 'blue']
+      ]
+      const idx = proportion > 0 ? 0 : 1
+      const i = d3.interpolateLab(palette[idx][1], palette[idx][0])
+      return i(proportion)
+    },
+
+    // 画图
     creatLineChart () {
       const that = this
       const keys = Object.keys(industryRatioJson)
@@ -84,98 +96,103 @@ export default {
         .attr('stroke', 'black')
         .style('stroke-dasharray', '5.5')
 
-      // 画圆环
       const linesPoints = this.getLineData(industryRatioJson, industryLineJson, copJson)
+      // 画圆环
       const ringsData = that.getRingData(ringJson)
-      // const views = main.append('g')
-      // views.sellectAll('g')
-      //   .data(ringsData)
-      //   .enter()
-      //   .append('g')
-      //   .attr('class', function (d, i) {
-      //     return 'view' + (i + 1)
-      //   })
-      const points = main.append('g')
-        .classed('points', true)
-      points.selectAll('g')
-        .data(ringsData[0])
+      const views = main.append('g')
+        .classed('views', true)
+      views.selectAll('g')
+        .data(ringsData)
         .enter()
         .append('g')
         .attr('class', function (d, i) {
-          return 'point' + (i + 1)
+          return 'view' + (i + 1)
         })
-      const linesCircles = main.append('g')
-        .classed('linesCircles', true)
-      linesCircles.selectAll('g')
-        .data(ringsData[0])
-        .enter()
-        .append('g')
-        .attr('class', function (d, i) {
-          return 'linesCircle' + (i + 1)
-        })
-      for (let i = 0; i < ringsData[0].length; i++) {
-        let point = points.select('.point' + (i + 1))
-        point = main.append('g').attr('transform', 'translate(' + linesPoints[0][i].x + ',' + linesPoints[0][i].y + ')')
-        const linesCircle = point.select('linesCircle' + (i + 1))
-        linesCircle.data(ringsData[0][i].linesColor)
+      for (let k = 0; k < ringsData.length; k++) {
+        let view = views.select('.view' + (k + 1))
+        view = views.append('g').attr('transform', 'translate(' + 0 + ',' + 0 + ')')
+        const points = view.append('g')
+          .classed('points', true)
+        points.selectAll('g')
+          .data(ringsData[k])
           .enter()
           .append('g')
           .attr('class', function (d, i) {
-            return 'lineCircle' + (i + 1)
+            return 'point' + (i + 1)
           })
-        // 画圆
-        const circle = point.append('circle')
-        circle.attr('cx', 0)
-          .attr('cy', 0)
-          .attr('r', ringsData[0][i].circleRadius)
-          .attr('fill', 'green')
-        // 画环
-        const arcs = point.append('g')
-          .classed('arcs', true)
-        arcs.selectAll('g')
-          .data(ringsData[0][i].ringsWidth)
+        const linesCircles = view.append('g')
+          .classed('linesCircles', true)
+        linesCircles.selectAll('g')
+          .data(ringsData[k])
           .enter()
           .append('g')
           .attr('class', function (d, i) {
-            return 'arc' + (i + 1)
+            return 'linesCircle' + (i + 1)
           })
-        console.log(ringsData[0][i].linesColor[0][0])
-        for (let j = 0; j < ringsData[0][i].ringsWidth.length; j++) {
-          const defs = main.append('defs')
-          const linearGradient = defs.append('linearGradient')
-            .attr('id', 'linearColor' + i + j)
-            .attr('x1', '0%')
-            .attr('y1', '0%')
-            .attr('x2', '100%')
-            .attr('y2', '0%')
-          const stop1 = linearGradient.append('stop')
-            .attr('offset', '0%')
-          stop1.style('stop-color', ringsData[0][i].linesColor[0].head)
-          const stop2 = linearGradient.append('stop')
-            .attr('offset', '100%')
-          stop2.style('stop-color', ringsData[0][i].linesColor[0].rear)
-          let lineCircle = linesCircle.select('.lineCircle' + (j + 1))
-          lineCircle = d3.path()
-          lineCircle.arc(0, 0, that.chartConfig.lineRadius, -Math.PI / 2 + j * 2 * Math.PI / 5, -Math.PI / 2 + (j + 1) * 2 * Math.PI / 5 - 0.1)
-          point.append('path')
-            .attr('d', lineCircle.toString())
-            .style('fill', 'none')
-            .style('stroke', 'url(#' + linearGradient.attr('id') + ')')
-            .style('stroke-width', '2')
-          let arc = arcs.select('.arc' + (i + 1))
-          arc = d3.arc()
-            .outerRadius(ringsData[0][i].ringsWidth[j])
-            .innerRadius(that.chartConfig.ringMinRadius)
-            .startAngle(j * 2 * Math.PI / 5)
-            .endAngle((j + 1) * 2 * Math.PI / 5)
-          const outArc = point.append('path')
-            .attr('d', arc)
-          if (ringsData[0][i].ringsProportion[j] === 0) {
-            outArc.attr('fill', 'blue')
-          } else if (ringsData[0][i].ringsProportion[j] > 0) {
-            outArc.attr('fill', 'red')
-          } else {
-            outArc.attr('fill', 'green')
+        for (let i = 0; i < ringsData[k].length; i++) {
+          let point = points.select('.point' + (i + 1))
+          point = view.append('g').attr('transform', 'translate(' + linesPoints[k][i].x + ',' + linesPoints[k][i].y + ')')
+          const linesCircle = point.select('linesCircle' + (i + 1))
+          linesCircle.data(ringsData[k][i].linesColor)
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+              return 'lineCircle' + (i + 1)
+            })
+          // 画圆
+          const circle = point.append('circle')
+          circle.attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', ringsData[k][i].circleRadius)
+            .attr('fill', 'green')
+          // 画环
+          const arcs = point.append('g')
+            .classed('arcs', true)
+          arcs.selectAll('g')
+            .data(ringsData[k][i].ringsWidth)
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+              return 'arc' + (i + 1)
+            })
+          for (let j = 0; j < ringsData[k][i].ringsWidth.length; j++) {
+            const defs = view.append('defs')
+            const linearGradient = defs.append('linearGradient')
+              .attr('id', 'linearColor' + i + '_' + j + '_' + k)
+              .attr('x1', '0%')
+              .attr('y1', '0%')
+              .attr('x2', '100%')
+              .attr('y2', '0%')
+            const stop1 = linearGradient.append('stop')
+              .attr('offset', '0%')
+            stop1.style('stop-color', ringsData[k][i].linesColor[j].head)
+            const stop2 = linearGradient.append('stop')
+              .attr('offset', '100%')
+            stop2.style('stop-color', ringsData[k][i].linesColor[j].rear)
+            let lineCircle = linesCircle.select('.lineCircle' + (j + 1))
+            lineCircle = d3.path()
+            lineCircle.arc(0, 0, that.chartConfig.lineRadius, -Math.PI / 2 + j * 2 * Math.PI / 5, -Math.PI / 2 + (j + 1) * 2 * Math.PI / 5 - 0.1)
+            point.append('path')
+              .attr('d', lineCircle.toString())
+              .style('fill', 'none')
+              .style('stroke', 'url(#' + linearGradient.attr('id') + ')')
+              .style('stroke-width', '2')
+            let arc = arcs.select('.arc' + (i + 1))
+            arc = d3.arc()
+              .outerRadius(ringsData[k][i].ringsWidth[j])
+              .innerRadius(that.chartConfig.ringMinRadius)
+              .startAngle(j * 2 * Math.PI / 5)
+              .endAngle((j + 1) * 2 * Math.PI / 5)
+            const outArc = point.append('path')
+              .attr('d', arc)
+            // if (ringsData[k][i].ringsProportion[j] === 0) {
+            //   outArc.attr('fill', 'blue')
+            // } else if (ringsData[k][i].ringsProportion[j] > 0) {
+            //   outArc.attr('fill', that.getColor(ringsData[k][i].ringsProportion[j]))
+            // } else {
+            //   outArc.attr('fill', that.getColor(ringsData[k][i].ringsProportion[j]))
+            // }
+            outArc.attr('fill', that.getColor(ringsData[k][i].ringsProportion[j]))
           }
         }
       }
@@ -330,7 +347,7 @@ export default {
 .container {
   width: 1600px;
   height: 600px;
-  border: 2px solid black;
+  /*border: 2px solid black;*/
 }
 
 </style>
