@@ -1,6 +1,7 @@
 <template>
   <nav>
 <!--    <router-link to="/">Home</router-link> |-->
+    <router-link to="/view1">View1</router-link> |
     <router-link to="/view2">View2</router-link> |
     <router-link to="/view3_1">View3_1</router-link> |
     <router-link to="/view3_2">View3_2</router-link> |
