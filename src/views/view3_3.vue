@@ -10,6 +10,7 @@
 import * as d3 from 'd3'
 import circleJson2 from '../data/circul/circul_2.json'
 import circleJson3 from '../data/circul/circul_3.json'
+import circleJson4 from '../data/circul/circul_4.json'
 
 export default {
   name: 'view3_3',
@@ -22,10 +23,10 @@ export default {
         ringColor: ['#2ca25f', '#fdae6b', '#3182bd', '#756bb1', '#636363', '#f03b20'],
         circleColor: '#99ccff',
         arcColor: 'blue',
-        outerRadius: [80, 100, 120, 140, 160, 180],
-        innerRadius: [70, 90, 110, 130, 150, 170],
-        circleRadius: 60,
-        arcRadius: 45
+        outerRadius: [40, 50, 60, 70, 80, 90],
+        innerRadius: [35, 45, 55, 65, 75, 85],
+        circleRadius: 30,
+        arcRadius: 22
       }
     }
   },
@@ -40,6 +41,10 @@ export default {
         }
         case 3: {
           fileName = circleJson3
+          break
+        }
+        case 4: {
+          fileName = circleJson4
           break
         }
       }
@@ -61,23 +66,23 @@ export default {
         // 5将来合图的时候要换
         const value = ringData[k]
         let view = views.select('.view' + (k + 1))
-        view = main.append('g').attr('transform', 'translate(' + 0 + ',' + 200 * k + ')')
+        view = main.append('g').attr('transform', 'translate(' + 0 + ',' + 150 * k + ')')
         const circle = view.append('circle')
         circle.attr('cx', 0)
           .attr('cy', 0)
           .attr('r', that.chartConfig.circleRadius)
           .attr('fill', that.chartConfig.circleColor)
         // 设置扇形原点位置,本质是将画笔g移到该有的位置
-        const innerArcRight = view.append('g').attr('transform', 'translate(' + 5 + ',' + 0 + ')')
+        const innerArcRight = view.append('g').attr('transform', 'translate(' + 2 + ',' + 0 + ')')
         const arcsRight = d3.arc()
           .outerRadius(that.chartConfig.arcRadius)
           .innerRadius(0)
-          .startAngle(0)
-          .endAngle(Math.PI * value.rightCircle)
+          .startAngle(Math.PI)
+          .endAngle(Math.PI * (1 - value.rightCircle))
         const arcRight = innerArcRight.append('path')
           .attr('d', arcsRight)
         arcRight.attr('fill', that.chartConfig.arcColor)
-        const innerArcLeft = view.append('g').attr('transform', 'translate(' + -5 + ',' + 0 + ')')
+        const innerArcLeft = view.append('g').attr('transform', 'translate(' + -2 + ',' + 0 + ')')
         const arcsLeft = d3.arc()
           .outerRadius(that.chartConfig.arcRadius)
           .innerRadius(0)
@@ -128,6 +133,9 @@ export default {
       }
       return ringData
     }
+  },
+  mounted () {
+    this.creatRingChart(3)
   }
 }
 </script>

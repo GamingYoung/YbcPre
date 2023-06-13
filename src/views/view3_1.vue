@@ -2,12 +2,12 @@
   <div class="container">
     <div class="basic" v-for="value1 in values" v-bind:key="value1.id">
       <div class="text">{{value1.names}}</div>
-      <button class="margin1 btn" :class="value1.eclat1>25 ? 'color1' : 'color0'" v-show=this.showAll[0]&this.isShow(0,value1.idx) @click="clickBtn(1, value1.idx,3)">{{value1.eclat1}}%</button>
-      <button class="margin2 btn" :class="value1.eclat2>25 ? 'color2' : 'color0'" v-show=this.showAll[1]&this.isShow(1,value1.idx) @click="clickBtn(2, value1.idx,3)">{{value1.eclat2}}%</button>
-      <button class="margin2 btn" :class="value1.eclat3>25 ? 'color3' : 'color0'" v-show=this.showAll[2]&this.isShow(2,value1.idx) @click="clickBtn(3, value1.idx,3)">{{value1.eclat3}}%</button>
-      <button class="margin2 btn" :class="value1.eclat4>25 ? 'color4' : 'color0'" v-show=this.showAll[3]&this.isShow(3,value1.idx) @click="clickBtn(4, value1.idx,3)">{{value1.eclat4}}%</button>
-      <button class="margin2 btn" :class="value1.eclat5>25 ? 'color5' : 'color0'" v-show=this.showAll[4]&this.isShow(4,value1.idx) @click="clickBtn(5, value1.idx,3)">{{value1.eclat5}}%</button>
-      <button class="margin2 btn" :class="value1.eclat6>25 ? 'color6' : 'color0'" v-show=this.showAll[5]&this.isShow(5,value1.idx) @click="clickBtn(6, value1.idx,3)">{{value1.eclat6}}%</button>
+      <button class="margin1 btn" :class="value1.eclat1>25 ? 'color1' : 'color0'" v-show=this.showAll[0]&this.isShow(0,value1.idx) @click="clickBtn(1, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat1}}%</button>
+      <button class="margin2 btn" :class="value1.eclat2>25 ? 'color2' : 'color0'" v-show=this.showAll[1]&this.isShow(1,value1.idx) @click="clickBtn(2, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat2}}%</button>
+      <button class="margin2 btn" :class="value1.eclat3>25 ? 'color3' : 'color0'" v-show=this.showAll[2]&this.isShow(2,value1.idx) @click="clickBtn(3, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat3}}%</button>
+      <button class="margin2 btn" :class="value1.eclat4>25 ? 'color4' : 'color0'" v-show=this.showAll[3]&this.isShow(3,value1.idx) @click="clickBtn(4, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat4}}%</button>
+      <button class="margin2 btn" :class="value1.eclat5>25 ? 'color5' : 'color0'" v-show=this.showAll[4]&this.isShow(4,value1.idx) @click="clickBtn(5, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat5}}%</button>
+      <button class="margin2 btn" :class="value1.eclat6>25 ? 'color6' : 'color0'" v-show=this.showAll[5]&this.isShow(5,value1.idx) @click="clickBtn(6, value1.idx,3)">{{value1.id.slice(-1)}} | {{value1.eclat6}}%</button>
     </div>
   </div>
 </template>
@@ -82,8 +82,8 @@ export default {
           eclatJson = eclat1
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
-            if (this.isShow(idx, i)) break
+            // if (this.isShow(idx, i)) break
+            this.values[i].id = ids[i]
             this.values[i].eclat1 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
@@ -91,7 +91,7 @@ export default {
           eclatJson = eclat2
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
+            this.values[i].id = ids[i]
             this.values[i].eclat2 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
@@ -100,7 +100,7 @@ export default {
           eclatJson = eclat3
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
+            this.values[i].id = ids[i]
             this.values[i].eclat3 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
@@ -108,7 +108,7 @@ export default {
           eclatJson = eclat4
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
+            this.values[i].id = ids[i]
             this.values[i].eclat4 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
@@ -116,7 +116,7 @@ export default {
           eclatJson = eclat5
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
+            this.values[i].id = ids[i]
             this.values[i].eclat5 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
@@ -124,12 +124,11 @@ export default {
           eclatJson = eclat6
           ids = Object.keys(eclatJson)
           for (let i = 0; i < this.values.length; i++) {
-            // this.values[i].id = ids[i]
+            this.values[i].id = ids[i]
             this.values[i].eclat6 = Math.round(eclatJson[ids[i]] * 100)
           }
           break
       }
-      // console.log(this.values[4].eclat1)
     }
   },
   mounted () {
@@ -143,7 +142,7 @@ export default {
 .container {
   width: 1300px;
   height: 750px;
-  border: 2px solid black;
+  /*border: 2px solid black;*/
 }
 
 .basic {
@@ -155,58 +154,62 @@ export default {
 
 /*据文字左边界*/
 .margin1 {
-  margin-left: 30px;
+  margin-left: 10px;
 }
 
 /*按钮之间边界距离*/
 .margin2 {
-  margin-left: 50px;
+  margin-left: 15px;
 }
 
 .text {
-  width: 120px;
+  width: 80px;
   height: 20px;
-  border: 2px solid blue;
+  border: 1px solid blue;
   border-radius: 4px;
   text-align: center;
+  font-size: 10px;
   /*display: table-cell;*/
   /*vertical-align: middle;*/
 }
 
 .btn {
-  width: 80px;
+  width: 60px;
   height: 24px;
   border-radius: 4px;
   text-align: center;
+  /*color: white;*/
+  border-color: white;
+  font-size: 10px;
 }
 
 .color0 {
-  background: gray;
+  background: #D9D9D9;
   pointer-events: none;
 }
 
 .color1 {
-  background: deepskyblue;
+  background: #9DC3E6;
 }
 
 .color2 {
-  background: darkgreen;
+  background: #A9D18E;
 }
 
 .color3 {
-  background: darkorange;
+  background: #F8CBAD;
 }
 
 .color4 {
-  background: goldenrod;
+  background: #A9D18E;
 }
 
 .color5 {
-  background: lightgoldenrodyellow;
+  background: #F8CBAD;
 }
 
 .color6 {
-  background: darkviolet;
+  background: #A9D18E;
 }
 
 </style>
