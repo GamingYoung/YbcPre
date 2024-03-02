@@ -27,11 +27,11 @@
 </template>
 
 <script>
-import corrInd from '../data/line/corr_ind.json'
-import industryRatioJson from '../data/line/ind_ratio_obj.json'
-import industryLineJson from '../data/line/ind_line_obj.json'
-import copJson from '../data/line/ind_copp.json'
-import ringJson from '../data/line/ring_obj.json'
+import corrInd from '../../data/line/corr_ind.json'
+import industryRatioJson from '../../data/line/ind_ratio_obj.json'
+import industryLineJson from '../../data/line/ind_line_obj.json'
+import copJson from '../../data/line/ind_copp.json'
+import ringJson from '../../data/line/ring_obj.json'
 import * as d3 from 'd3'
 export default {
   name: 'view_4',
@@ -128,7 +128,7 @@ export default {
         .style('stroke-dasharray', '5.5')
 
       const linesPoints = this.getLineData(industryRatioJson, industryLineJson, copJson)
-      console.log(linesPoints)
+      // console.log(linesPoints)
       // 画圆环
       const ringsData = that.getRingData(ringJson)
       const views = main.append('g')

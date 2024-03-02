@@ -8,7 +8,7 @@
 
 <script>
 import * as d3 from 'd3'
-import roseJson from '../data/rose/rose.json'
+import roseJson from '../../data/rose/rose.json'
 export default {
   name: 'view1_1',
   data () {

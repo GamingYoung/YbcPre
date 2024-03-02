@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import eclat1 from '../data/tree/eclat_1.json'
-import eclat2 from '../data/tree/eclat_2.json'
-import eclat3 from '../data/tree/eclat_3.json'
-import eclat4 from '../data/tree/eclat_4.json'
-import eclat5 from '../data/tree/eclat_5.json'
-import eclat6 from '../data/tree/eclat_6.json'
+import eclat1 from '../../data/tree/eclat_1.json'
+import eclat2 from '../../data/tree/eclat_2.json'
+import eclat3 from '../../data/tree/eclat_3.json'
+import eclat4 from '../../data/tree/eclat_4.json'
+import eclat5 from '../../data/tree/eclat_5.json'
+import eclat6 from '../../data/tree/eclat_6.json'
 export default {
   name: 'view3_1',
   data () {

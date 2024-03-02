@@ -1,13 +1,15 @@
 <template>
-  <nav>
-<!--    <router-link to="/">Home</router-link> |-->
-    <router-link to="/view1">View1</router-link> |
-    <router-link to="/view1_1">View1_1</router-link> |
-    <router-link to="/view2">View2</router-link> |
-    <router-link to="/view3_1">View3_1</router-link> |
-    <router-link to="/view3_2">View3_2</router-link> |
-    <router-link to="/view3_3">View3_3</router-link> |
-    <router-link to="/view4">View4</router-link>
+  <nav>D3：
+    <router-link to="/view1">平行坐标图</router-link> |
+    <router-link to="/view1_1">玫瑰图</router-link> |
+    <router-link to="/view2">雷达图</router-link> |
+    <router-link to="/view3_1">树状图</router-link> |
+    <router-link to="/view3_2">转换矩阵图</router-link> |
+    <router-link to="/view3_3">层次圆环图</router-link> |
+    <router-link to="/view4">时序差分折线图</router-link>
+    <br>
+    Vega-Lite:
+    <router-link to="/vegaChart">柱状图</router-link>
   </nav>
   <router-view/>
 </template>

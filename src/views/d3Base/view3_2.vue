@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import axisJson from '../data/scatter/axis1.json'
-import pointJson2 from '../data/scatter/point_2.json'
-import pointJson3 from '../data/scatter/point_3.json'
-import pointJson4 from '../data/scatter/point_4.json'
-import pointJson5 from '../data/scatter/point_5.json'
-import pointJson6 from '../data/scatter/point_6.json'
+import axisJson from '../../data/scatter/axis1.json'
+import pointJson2 from '../../data/scatter/point_2.json'
+import pointJson3 from '../../data/scatter/point_3.json'
+import pointJson4 from '../../data/scatter/point_4.json'
+import pointJson5 from '../../data/scatter/point_5.json'
+import pointJson6 from '../../data/scatter/point_6.json'
 import * as d3 from 'd3'
 
 export default {
@@ -234,7 +234,7 @@ export default {
       for (let i = 0; i < pointsData.length; i++) {
         const sliceX = this.calSliceY(pointsData[i].x, axisData1)
         const sliceY = this.calSliceY(pointsData[i].y, axisData2)
-        console.log('1')
+        // console.log('1')
         if (flag === 0) {
           const x = this.chartConfig.axisValue[axisData1.length - 1 - sliceX] + 40 - (pointsData[i].x - axisData1[sliceX].min) / (axisData1[sliceX].max - axisData1[sliceX].min) * 40
           const y = this.chartConfig.axisValue[axisData2.length - 1 - sliceY] + 40 - (pointsData[i].y - axisData2[sliceY].min) / (axisData2[sliceY].max - axisData2[sliceY].min) * 40

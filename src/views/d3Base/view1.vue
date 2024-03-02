@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import axisJson from '../data/parallelCoordinate/axis.json'
-import corrDetailJson from '../data/parallelCoordinate/corr_detail.json'
-import paraDetailJson from '../data/parallelCoordinate/para_detail.json'
+import axisJson from '../../data/parallelCoordinate/axis.json'
+import corrDetailJson from '../../data/parallelCoordinate/corr_detail.json'
+import paraDetailJson from '../../data/parallelCoordinate/para_detail.json'
 import * as d3 from 'd3'
 export default {
   name: 'view_1',

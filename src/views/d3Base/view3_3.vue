@@ -8,9 +8,9 @@
 
 <script>
 import * as d3 from 'd3'
-import circleJson2 from '../data/circul/circul_2.json'
-import circleJson3 from '../data/circul/circul_3.json'
-import circleJson4 from '../data/circul/circul_4.json'
+import circleJson2 from '../../data/circul/circul_2.json'
+import circleJson3 from '../../data/circul/circul_3.json'
+import circleJson4 from '../../data/circul/circul_4.json'
 
 export default {
   name: 'view3_3',
