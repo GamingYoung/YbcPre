@@ -1,4 +1,4 @@
-# view2
+# VisDemo
 
 ## Project setup
 ```
